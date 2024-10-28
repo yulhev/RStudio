@@ -1,0 +1,64 @@
+setwd("C:\\Users\\Laura\\OneDrive\\Рабочий стол\\lb2 defence")
+getwd()
+dir()
+A<-read.table("population.txt",header = T, sep="");A
+str(A)
+
+#Task1----
+summary(A)
+var(A$age);var(A$mileage); var(A$price)
+sd(A$age);sd(A$mileage); sd(A$price)
+
+#Task2----
+set.seed(1214)
+
+sample(nrow(A),300) 
+
+S=A[sample(nrow(A),300,F), ];S
+summary(S)
+var(S$age);var(S$mileage); var(S$price)
+sd(S$age);sd(S$mileage); sd(S$price)
+
+#Task3----
+population_median <- median(A$price);population_median
+sample_median <- median(S$price);sample_median
+diff<- population_median -sample_median; diff
+#Task4----
+set.seed(1214)
+
+sample(nrow(A),350) 
+
+S1=A[sample(nrow(A),350,F), ];S1
+t<-t.test(S1$mileage, mu=250000);t
+p_value <- t$p.value;p_value 
+
+#Task5----
+set.seed(1214)
+
+sample(nrow(A),320) 
+
+S2=A[sample(nrow(A),320,F), ];S2
+hist(S2$mileage,freq=FALSE, main="Task 5")
+dev.copy(pdf, file = "Hevchuk.pdf")
+dev.off()
+
+#Task6----
+#set the seedset.seed(1214)
+#random 340 
+sample_data <- A[sample(nrow(A), 340), ]
+# Regression equation: price = beta0 + beta1 * age
+
+lm_model <- lm(price ~ age, data = sample_data)
+# regression coefficients
+cat("Regression Equation (Price depending on Age):\n")
+cat("Intercept (beta0):", coef(lm_model)[1], "\n")
+cat("Slope (beta1):", coef(lm_model)[2], "\n")
+# graph of average price for each age
+avg_price <- tapply(sample_data$price, sample_data$age, mean)
+barplot(avg_price, names.arg = names(avg_price), col = "pink", main = "Average Price vs. Age", xlab = "Age", ylab = "Average Price")
+#regression line on top of the graph
+abline(lm_model, col = "red", lwd = 2)
+#saving the graph
+dev.copy(pdf, file = "Hevchuk2.pdf")
+dev.off()
+
